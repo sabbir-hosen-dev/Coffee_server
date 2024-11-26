@@ -28,14 +28,32 @@ async function run() {
   try {
     await client.connect();
 
-    const coffeeCollecitn = client.db(`${process.env.DB_USER}`).collection("coffee")
+    const coffeeCollecitn = client.db(`${process.env.DB_USER}`).collection("coffee");
+
+    app.get("/coffee" , async (req,res) => {
+      const result = await coffeeCollecitn.find();
+      const data = await result.toArray();
+      res.send(data)
+    })
+
+    app.post("/coffees", async(req,res) => {
+      const data = req.body
+      
+      const result = await coffeeCollecitn.insertOne(data)
+
+      res.send(result)
+    })
+
+    app.put("/coffees", async (req,res) => {
+      
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
