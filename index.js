@@ -30,10 +30,19 @@ async function run() {
 
     const coffeeCollecitn = client.db(`${process.env.DB_USER}`).collection("coffee");
 
-    app.get("/coffee" , async (req,res) => {
+    app.get("/coffees" , async (req,res) => {
       const result = await coffeeCollecitn.find();
       const data = await result.toArray();
       res.send(data)
+    })
+
+    app.get("/coffees/:id", async (req,res) => {
+      const id = req.params.id;
+
+      const find = {_id : new ObjectId(id)};
+
+      const result = await coffeeCollecitn.findOne(find);
+      res.send(result)
     })
 
     app.post("/coffees", async(req,res) => {
